@@ -1,5 +1,6 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import type { ViewMode, Category, MaterialImage, SearchResult } from './types';
+import { CATEGORIES } from './types';
 import { getAllImages, getImagesByCategory, deleteImage, getImageCount } from './utils/db';
 import Header from './components/Header';
 import CategorySidebar from './components/CategorySidebar';
@@ -35,6 +36,15 @@ export default function App() {
     loadImages();
   }, [loadImages]);
 
+  const imageCounts = useMemo(() => {
+    const counts: Record<string, number> = { '全部': allImages.length };
+    for (const cat of CATEGORIES) {
+      if (cat === '全部') continue;
+      counts[cat] = allImages.filter((img) => img.category === cat).length;
+    }
+    return counts;
+  }, [allImages]);
+
   const handleCategoryChange = async (cat: Category) => {
     setSelectedCategory(cat);
     if (cat === '全部') {
@@ -56,54 +66,71 @@ export default function App() {
   }, []);
 
   return (
-    <div className="min-h-screen flex flex-col">
-      <Header viewMode={viewMode} onViewModeChange={setViewMode} imageCount={imageCount} />
+    <div className="min-h-screen flex flex-col bg-[var(--color-bg)]">
+      <Header
+        viewMode={viewMode}
+        onViewModeChange={setViewMode}
+        imageCount={imageCount}
+        onUpload={() => setShowUpload(true)}
+      />
 
       <div className="flex flex-1 overflow-hidden">
         {viewMode === 'library' && (
-          <CategorySidebar selectedCategory={selectedCategory} onCategoryChange={handleCategoryChange} />
+          <CategorySidebar
+            selectedCategory={selectedCategory}
+            onCategoryChange={handleCategoryChange}
+            imageCounts={imageCounts}
+          />
         )}
 
-        <main className="flex-1 overflow-y-auto p-6">
-          {viewMode === 'search' && (
-            <SearchPanel library={allImages} onResults={handleSearchResults} />
-          )}
+        <main className="flex-1 overflow-y-auto">
+          <div className="max-w-[1600px] mx-auto p-6">
+            {viewMode === 'search' && (
+              <SearchPanel library={allImages} onResults={handleSearchResults} />
+            )}
 
-          {/* Toolbar */}
-          {viewMode === 'library' && (
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-base font-semibold text-[var(--color-text)]">
-                {selectedCategory === '全部' ? '全部素材' : selectedCategory}
-                <span className="text-sm font-normal text-[var(--color-text-secondary)] ml-2">
-                  ({images.length})
-                </span>
-              </h2>
-              <button
-                onClick={() => setShowUpload(true)}
-                className="flex items-center gap-2 px-4 py-2 bg-[var(--color-primary)] text-white text-sm font-medium rounded-lg hover:bg-[var(--color-primary-dark)] transition-colors"
-              >
-                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-                </svg>
-                上传素材
-              </button>
-            </div>
-          )}
+            {/* Library toolbar */}
+            {viewMode === 'library' && (
+              <div className="flex items-center justify-between mb-6">
+                <div>
+                  <h2 className="text-xl font-bold text-[var(--color-text)]">
+                    {selectedCategory === '全部' ? '全部素材' : selectedCategory}
+                  </h2>
+                  <p className="text-sm text-[var(--color-text-tertiary)] mt-0.5">
+                    共 {images.length} 张素材图片
+                  </p>
+                </div>
+              </div>
+            )}
 
-          {/* Content */}
-          {viewMode === 'library' ? (
-            <ImageGrid
-              images={images}
-              onDelete={handleDelete}
-              onView={setDetailImage}
-            />
-          ) : (
-            <ImageGrid
-              searchResults={searchResults}
-              onView={setDetailImage}
-              emptyMessage="上传一张图片开始搜索匹配的材质"
-            />
-          )}
+            {/* Search results header */}
+            {viewMode === 'search' && searchResults.length > 0 && (
+              <div className="flex items-center justify-between mb-5">
+                <h2 className="text-lg font-bold text-[var(--color-text)]">
+                  搜索结果
+                  <span className="text-sm font-normal text-[var(--color-text-tertiary)] ml-2">
+                    找到 {searchResults.length} 个匹配
+                  </span>
+                </h2>
+              </div>
+            )}
+
+            {/* Content */}
+            {viewMode === 'library' ? (
+              <ImageGrid
+                images={images}
+                onDelete={handleDelete}
+                onView={setDetailImage}
+              />
+            ) : (
+              <ImageGrid
+                searchResults={searchResults}
+                onView={setDetailImage}
+                emptyMessage="以图搜图"
+                emptySubMessage="上传一张材质图片，搜索资源库中相似的板材花纹和材质"
+              />
+            )}
+          </div>
         </main>
       </div>
 
