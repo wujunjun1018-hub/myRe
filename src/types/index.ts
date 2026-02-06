@@ -1,29 +1,48 @@
 export interface ColorHistogram {
-  /** HSL hue bins (12 bins, 30° each) */
+  /** Hue bins (24 bins, 15deg each) */
   hue: number[];
-  /** Saturation bins (5 bins) */
+  /** Saturation bins (8 bins) */
   saturation: number[];
-  /** Lightness bins (5 bins) */
+  /** Lightness bins (8 bins) */
   lightness: number[];
-  /** Dominant colors as [h, s, l] arrays */
+  /** Dominant colors as [h, s, l] arrays (top 8) */
   dominantColors: [number, number, number][];
+  /** Dominant color weights (proportion of image) */
+  dominantWeights: number[];
+}
+
+export interface ColorMoments {
+  /** Per-channel mean [L, a, b] in Lab space */
+  mean: [number, number, number];
+  /** Per-channel stddev */
+  stddev: [number, number, number];
+  /** Per-channel skewness */
+  skewness: [number, number, number];
 }
 
 export interface TextureFeatures {
   /** Edge density (0-1) */
   edgeDensity: number;
-  /** Directional histogram (8 directions) */
+  /** Directional histogram (16 directions) */
   directionality: number[];
-  /** Coarseness/fineness score (0-1) */
+  /** Coarseness at multiple scales */
   coarseness: number;
   /** Contrast score (0-1) */
   contrast: number;
   /** Regularity/pattern repetition score (0-1) */
   regularity: number;
+  /** LBP (Local Binary Pattern) histogram (uniform patterns, 10 bins) */
+  lbpHistogram: number[];
+  /** GLCM features: energy, correlation, homogeneity, entropy */
+  glcmEnergy: number;
+  glcmCorrelation: number;
+  glcmHomogeneity: number;
+  glcmEntropy: number;
 }
 
 export interface ImageFeatures {
   colorHistogram: ColorHistogram;
+  colorMoments: ColorMoments;
   textureFeatures: TextureFeatures;
   /** Average color as [r, g, b] */
   avgColor: [number, number, number];
@@ -32,9 +51,6 @@ export interface ImageFeatures {
 export interface MaterialImage {
   id: string;
   name: string;
-  /** Category: wood type, pattern type, etc. */
-  category: string;
-  /** Tags for filtering */
   tags: string[];
   /** Base64 thumbnail (small preview) */
   thumbnail: string;
@@ -68,17 +84,3 @@ export interface SearchWeights {
   color: number;
   texture: number;
 }
-
-export const CATEGORIES = [
-  '全部',
-  '橡木',
-  '胡桃木',
-  '松木',
-  '樱桃木',
-  '枫木',
-  '柚木',
-  '榉木',
-  '其他',
-] as const;
-
-export type Category = (typeof CATEGORIES)[number];

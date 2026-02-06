@@ -97,9 +97,6 @@ export default function ImageCard({ image, score, colorScore, textureScore, onDe
       <div className="p-3">
         <h3 className="text-sm font-semibold text-[var(--color-text)] truncate leading-snug">{image.name}</h3>
         <div className="flex items-center gap-2 mt-1.5">
-          <span className="text-[11px] text-[var(--color-primary)] bg-[var(--color-primary-bg)] px-2 py-0.5 rounded-md font-medium">
-            {image.category}
-          </span>
           <div
             className="w-3.5 h-3.5 rounded-full border border-[var(--color-border)] shadow-inner"
             style={{ backgroundColor: `rgb(${image.features.avgColor.join(',')})` }}
@@ -109,9 +106,9 @@ export default function ImageCard({ image, score, colorScore, textureScore, onDe
           </span>
         </div>
 
-        {/* Score details */}
-        {score !== undefined && hovered && (
-          <div className="mt-2.5 pt-2.5 border-t border-[var(--color-border-light)] space-y-1.5 animate-fade-in">
+        {/* Score details - always visible for search results */}
+        {score !== undefined && (
+          <div className="mt-2.5 pt-2.5 border-t border-[var(--color-border-light)] space-y-1.5">
             <div className="flex items-center gap-2">
               <span className="text-[11px] text-[var(--color-text-tertiary)] w-8">色彩</span>
               <div className="flex-1 bg-[var(--color-surface-hover)] rounded-full h-1.5 overflow-hidden">

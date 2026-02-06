@@ -2,7 +2,7 @@ import { openDB, type IDBPDatabase } from 'idb';
 import type { MaterialImage } from '../types';
 
 const DB_NAME = 'material-image-search';
-const DB_VERSION = 1;
+const DB_VERSION = 2;
 const IMAGE_STORE = 'images';
 const BLOB_STORE = 'blobs';
 
@@ -11,14 +11,18 @@ let dbInstance: IDBPDatabase | null = null;
 async function getDB(): Promise<IDBPDatabase> {
   if (dbInstance) return dbInstance;
   dbInstance = await openDB(DB_NAME, DB_VERSION, {
-    upgrade(db) {
-      if (!db.objectStoreNames.contains(IMAGE_STORE)) {
+    upgrade(db, oldVersion, _newVersion, transaction) {
+      if (oldVersion < 1) {
         const store = db.createObjectStore(IMAGE_STORE, { keyPath: 'id' });
-        store.createIndex('category', 'category');
         store.createIndex('createdAt', 'createdAt');
-      }
-      if (!db.objectStoreNames.contains(BLOB_STORE)) {
         db.createObjectStore(BLOB_STORE);
+      }
+      if (oldVersion < 2) {
+        // Remove category index from v1
+        const store = transaction.objectStore(IMAGE_STORE);
+        if (store.indexNames.contains('category')) {
+          store.deleteIndex('category');
+        }
       }
     },
   });
@@ -36,13 +40,6 @@ export async function saveImage(image: MaterialImage, blob: Blob): Promise<void>
 export async function getAllImages(): Promise<MaterialImage[]> {
   const db = await getDB();
   const images = await db.getAll(IMAGE_STORE);
-  return images.sort((a: MaterialImage, b: MaterialImage) => b.createdAt - a.createdAt);
-}
-
-export async function getImagesByCategory(category: string): Promise<MaterialImage[]> {
-  if (category === '全部') return getAllImages();
-  const db = await getDB();
-  const images = await db.getAllFromIndex(IMAGE_STORE, 'category', category);
   return images.sort((a: MaterialImage, b: MaterialImage) => b.createdAt - a.createdAt);
 }
 

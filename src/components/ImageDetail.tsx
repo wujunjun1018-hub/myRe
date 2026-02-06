@@ -65,9 +65,6 @@ export default function ImageDetail({ image, onClose }: ImageDetailProps) {
             <div className="flex items-start justify-between gap-3">
               <div className="min-w-0">
                 <h2 className="text-base font-bold text-[var(--color-text)] truncate">{image.name}</h2>
-                <span className="text-[11px] text-[var(--color-primary)] bg-[var(--color-primary-bg)] px-2 py-0.5 rounded-md font-medium inline-block mt-1.5">
-                  {image.category}
-                </span>
               </div>
               <button
                 onClick={onClose}

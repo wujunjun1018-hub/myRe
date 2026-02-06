@@ -1,6 +1,6 @@
 import { useState, useRef, useCallback } from 'react';
 import { v4 as uuidv4 } from 'uuid';
-import { CATEGORIES, type Category, type MaterialImage } from '../types';
+import type { MaterialImage } from '../types';
 import { extractFeatures, loadImageAsImageData, createThumbnail } from '../utils/imageFeatures';
 import { saveImage } from '../utils/db';
 
@@ -14,7 +14,6 @@ interface PendingFile {
   file: File;
   preview: string;
   name: string;
-  category: Category;
 }
 
 export default function UploadModal({ open, onClose, onUploaded }: UploadModalProps) {
@@ -32,7 +31,6 @@ export default function UploadModal({ open, onClose, onUploaded }: UploadModalPr
         file,
         preview: URL.createObjectURL(file),
         name: file.name.replace(/\.[^/.]+$/, ''),
-        category: '其他',
       });
     }
     setPendingFiles((prev) => [...prev, ...newFiles]);
@@ -80,7 +78,6 @@ export default function UploadModal({ open, onClose, onUploaded }: UploadModalPr
         const image: MaterialImage = {
           id,
           name: pf.name,
-          category: pf.category,
           tags: [],
           thumbnail,
           blobKey: `blob-${id}`,
@@ -183,7 +180,7 @@ export default function UploadModal({ open, onClose, onUploaded }: UploadModalPr
               {pendingFiles.map((pf, idx) => (
                 <div key={idx} className="flex items-center gap-3 p-3 bg-[var(--color-surface-hover)] rounded-xl border border-[var(--color-border-light)] hover:border-[var(--color-border)] transition-colors">
                   <img src={pf.preview} alt="" className="w-14 h-14 object-cover rounded-xl shadow-sm" />
-                  <div className="flex-1 min-w-0 space-y-1.5">
+                  <div className="flex-1 min-w-0">
                     <input
                       type="text"
                       value={pf.name}
@@ -191,15 +188,6 @@ export default function UploadModal({ open, onClose, onUploaded }: UploadModalPr
                       className="w-full text-sm bg-white border border-[var(--color-border)] rounded-lg px-3 py-1.5 focus:outline-none focus:border-[var(--color-primary)] focus:ring-2 focus:ring-[var(--color-primary)]/10 transition-all"
                       placeholder="素材名称"
                     />
-                    <select
-                      value={pf.category}
-                      onChange={(e) => updatePending(idx, { category: e.target.value as Category })}
-                      className="text-xs bg-white border border-[var(--color-border)] rounded-lg px-2.5 py-1.5 focus:outline-none focus:border-[var(--color-primary)] focus:ring-2 focus:ring-[var(--color-primary)]/10 transition-all"
-                    >
-                      {CATEGORIES.filter((c) => c !== '全部').map((cat) => (
-                        <option key={cat} value={cat}>{cat}</option>
-                      ))}
-                    </select>
                   </div>
                   <button
                     onClick={() => removePending(idx)}
