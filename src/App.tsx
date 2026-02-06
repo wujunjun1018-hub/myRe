@@ -91,8 +91,8 @@ export default function App() {
         onOpenLibrary={() => setShowUpload(true)}
       />
 
-      <main className="flex-1 overflow-y-auto">
-        <div className="max-w-[1600px] mx-auto px-4 sm:px-6 py-5 sm:py-6">
+      <main className="flex-1">
+        <div className="max-w-5xl mx-auto px-4 py-8">
           {!queryImage && (
             <SearchPanel
               library={images}
@@ -102,28 +102,29 @@ export default function App() {
           )}
 
           {queryImage && (
-            <section className="space-y-5 sm:space-y-6 animate-fade-in">
-              <div className="rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)] px-5 py-4 shadow-[var(--shadow-md)] flex flex-wrap items-center justify-between gap-4">
-                <div className="flex items-center gap-3">
-                  <span className="inline-flex w-2 h-2 rounded-full bg-emerald-400" />
+            <div className="animate-fade-in">
+              {/* Toolbar */}
+              <div className="flex items-center justify-between mb-6">
+                <div className="flex items-center gap-2">
+                  <span className={`w-2 h-2 rounded-full ${searching ? 'bg-[var(--color-primary)] animate-pulse' : 'bg-[var(--color-success)]'}`} />
                   <span className="text-sm text-[var(--color-text-secondary)]">
-                    {searching ? '正在分析图片特征...' : `匹配完成，找到 ${searchResults.length} 个结果`}
+                    {searching ? '分析中...' : `找到 ${searchResults.length} 个结果`}
                   </span>
                 </div>
-                <div className="flex items-center gap-2 w-full sm:w-auto">
+                <div className="flex items-center gap-2">
                   <button
                     type="button"
                     onClick={() => queryInputRef.current?.click()}
-                    className="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-xl bg-[var(--color-surface-hover)] border border-[var(--color-border)] text-sm text-[var(--color-text)] hover:bg-[var(--color-surface)] transition-all flex-1 sm:flex-none"
+                    className="px-3 py-1.5 text-sm text-[var(--color-text-secondary)] hover:text-[var(--color-text)] bg-[var(--color-surface)] hover:bg-[var(--color-surface-hover)] rounded-lg transition-colors"
                   >
                     重新上传
                   </button>
                   <button
                     type="button"
                     onClick={handleResetQuery}
-                    className="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-xl border border-[var(--color-border)] text-sm text-[var(--color-text-secondary)] hover:text-[var(--color-text)] hover:bg-[var(--color-surface-hover)] transition-all flex-1 sm:flex-none"
+                    className="px-3 py-1.5 text-sm text-[var(--color-text-secondary)] hover:text-[var(--color-text)] hover:bg-[var(--color-surface)] rounded-lg transition-colors"
                   >
-                    重新开始
+                    返回
                   </button>
                   <input
                     ref={queryInputRef}
@@ -139,72 +140,80 @@ export default function App() {
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 xl:grid-cols-[320px_minmax(0,1fr)] gap-5 sm:gap-6 items-start">
-                <aside className="rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)] p-4 shadow-[var(--shadow-md)] xl:sticky xl:top-24">
-                  <div className="text-[11px] font-semibold tracking-wide text-[var(--color-text-tertiary)]">SOURCE IMAGE</div>
-                  <div className="mt-3 rounded-xl overflow-hidden border border-[var(--color-border)] bg-black/20">
-                    <img src={queryImage} alt="查询图" className="w-full aspect-square object-cover" />
+              {/* Content */}
+              <div className="grid grid-cols-1 lg:grid-cols-[240px_1fr] gap-6">
+                {/* Sidebar - Query Image */}
+                <aside className="space-y-4">
+                  <div className="bg-[var(--color-surface)] rounded-xl p-3">
+                    <div className="text-xs text-[var(--color-text-tertiary)] mb-2">查询图片</div>
+                    <div className="rounded-lg overflow-hidden bg-[var(--color-surface-elevated)]">
+                      <img src={queryImage} alt="查询图" className="w-full aspect-square object-cover" />
+                    </div>
                   </div>
+
                   {quickStats && (
-                    <>
-                      <div className="mt-4 grid grid-cols-3 gap-2">
-                        <div className="rounded-lg border border-[var(--color-border)] bg-black/15 p-2 text-center">
+                    <div className="bg-[var(--color-surface)] rounded-xl p-3 space-y-3">
+                      <div className="text-xs text-[var(--color-text-tertiary)]">图片特征</div>
+                      
+                      <div className="grid grid-cols-3 gap-2">
+                        <div className="text-center">
+                          <div className="text-lg font-semibold text-[var(--color-text)]">{quickStats.edge}%</div>
                           <div className="text-[10px] text-[var(--color-text-tertiary)]">边缘</div>
-                          <div className="text-sm font-semibold text-[var(--color-text)] mt-0.5">{quickStats.edge}%</div>
                         </div>
-                        <div className="rounded-lg border border-[var(--color-border)] bg-black/15 p-2 text-center">
+                        <div className="text-center">
+                          <div className="text-lg font-semibold text-[var(--color-text)]">{quickStats.contrast}%</div>
                           <div className="text-[10px] text-[var(--color-text-tertiary)]">对比</div>
-                          <div className="text-sm font-semibold text-[var(--color-text)] mt-0.5">{quickStats.contrast}%</div>
                         </div>
-                        <div className="rounded-lg border border-[var(--color-border)] bg-black/15 p-2 text-center">
+                        <div className="text-center">
+                          <div className="text-lg font-semibold text-[var(--color-text)]">{quickStats.regularity}%</div>
                           <div className="text-[10px] text-[var(--color-text-tertiary)]">规律</div>
-                          <div className="text-sm font-semibold text-[var(--color-text)] mt-0.5">{quickStats.regularity}%</div>
                         </div>
                       </div>
-                      <div className="mt-4">
-                        <div className="text-[11px] text-[var(--color-text-tertiary)] mb-2">主色调</div>
-                        <div className="flex rounded-lg overflow-hidden border border-[var(--color-border)]">
+
+                      <div>
+                        <div className="text-[10px] text-[var(--color-text-tertiary)] mb-1.5">主色调</div>
+                        <div className="flex rounded-md overflow-hidden h-4">
                           {quickStats.colors.map((c, i) => (
                             <div
                               key={i}
-                              className="h-7 flex-1"
+                              className="flex-1"
                               style={{ backgroundColor: `hsl(${c[0]}, ${c[1] * 100}%, ${c[2] * 100}%)` }}
                             />
                           ))}
                         </div>
                       </div>
-                    </>
+                    </div>
                   )}
                 </aside>
 
+                {/* Results */}
                 <div>
-                  <div className="mb-4 flex items-end justify-between gap-4">
-                    <div>
-                      <h3 className="text-lg font-semibold text-[var(--color-text)]">匹配结果</h3>
-                      <p className="text-xs text-[var(--color-text-tertiary)] mt-1">按综合相似度排序，优先展示前 12 个结果</p>
-                    </div>
+                  <div className="mb-4">
+                    <h2 className="text-base font-medium text-[var(--color-text)]">匹配结果</h2>
+                    <p className="text-xs text-[var(--color-text-tertiary)] mt-0.5">按相似度排序</p>
                   </div>
                   <ImageGrid
                     searchResults={searchResults}
                     loading={searching}
                     onView={setDetailImage}
                     emptyMessage={searching ? '分析中...' : '暂无匹配'}
-                    emptySubMessage={images.length === 0 ? '请先点击右上角设置按钮上传素材到资源库' : '换一张图片试试'}
+                    emptySubMessage={images.length === 0 ? '请先上传素材到素材库' : '换一张图片试试'}
                   />
                 </div>
               </div>
-            </section>
+            </div>
           )}
 
+          {/* Library Section */}
           {!queryImage && images.length > 0 && (
-            <div className="mt-10">
-              <div className="flex items-end justify-between gap-4 mb-4">
+            <div className="mt-16 pt-8 border-t border-[var(--color-border)]">
+              <div className="flex items-center justify-between mb-4">
                 <div>
-                  <div className="text-sm font-semibold text-[var(--color-text)]">素材库</div>
-                  <div className="text-xs text-[var(--color-text-tertiary)] mt-1">已收录 {images.length} 张素材（点击右上角可继续上传）</div>
+                  <h2 className="text-base font-medium text-[var(--color-text)]">素材库</h2>
+                  <p className="text-xs text-[var(--color-text-tertiary)] mt-0.5">已收录 {images.length} 个素材</p>
                 </div>
               </div>
-              <ImageGrid images={images.slice(0, 8)} onDelete={handleDelete} onView={setDetailImage} />
+              <ImageGrid images={images.slice(0, 6)} onDelete={handleDelete} onView={setDetailImage} />
             </div>
           )}
         </div>
