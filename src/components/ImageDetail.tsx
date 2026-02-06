@@ -46,11 +46,11 @@ export default function ImageDetail({ image, onClose }: ImageDetailProps) {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 animate-fade-in" onClick={onClose}>
       <div
-        className="bg-white rounded-2xl shadow-[var(--shadow-xl)] max-w-5xl max-h-[90vh] w-full mx-4 overflow-hidden flex animate-scale-in"
+        className="bg-[rgba(12,14,20,0.92)] rounded-2xl shadow-[var(--shadow-xl)] max-w-5xl max-h-[90vh] w-full mx-4 overflow-hidden flex animate-scale-in border border-[var(--color-border)]"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Image */}
-        <div className="flex-1 bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center min-w-0 p-4 relative">
+        <div className="flex-1 bg-black/25 flex items-center justify-center min-w-0 p-4 relative">
           <img
             src={fullUrl ?? image.thumbnail}
             alt={image.name}
@@ -59,7 +59,7 @@ export default function ImageDetail({ image, onClose }: ImageDetailProps) {
         </div>
 
         {/* Info sidebar */}
-        <div className="w-80 shrink-0 border-l border-[var(--color-border)] flex flex-col">
+        <div className="w-80 shrink-0 border-l border-[var(--color-border)] flex flex-col bg-[var(--color-surface)]">
           {/* Header */}
           <div className="p-5 pb-4 border-b border-[var(--color-border)]">
             <div className="flex items-start justify-between gap-3">
