@@ -4,6 +4,7 @@ import ImageCard from './ImageCard';
 interface ImageGridProps {
   images?: MaterialImage[];
   searchResults?: SearchResult[];
+  loading?: boolean;
   onDelete?: (id: string, blobKey: string) => void;
   onView?: (image: MaterialImage) => void;
   emptyMessage?: string;
@@ -13,12 +14,33 @@ interface ImageGridProps {
 export default function ImageGrid({
   images,
   searchResults,
+  loading = false,
   onDelete,
   onView,
   emptyMessage = '暂无素材',
   emptySubMessage = '点击右上角「上传素材」按钮添加第一张图片',
 }: ImageGridProps) {
   const items = searchResults ?? images?.map((img) => ({ image: img }));
+
+  if (loading) {
+    return (
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-6">
+        {Array.from({ length: 8 }).map((_, i) => (
+          <div
+            key={i}
+            className="rounded-2xl overflow-hidden border border-[var(--color-border)] bg-[var(--color-surface)]"
+          >
+            <div className="aspect-[4/3] shimmer" />
+            <div className="p-4 space-y-2.5">
+              <div className="h-3.5 w-2/3 rounded-md shimmer" />
+              <div className="h-2 w-full rounded-md shimmer" />
+              <div className="h-2 w-5/6 rounded-md shimmer" />
+            </div>
+          </div>
+        ))}
+      </div>
+    );
+  }
 
   if (!items || items.length === 0) {
     return (

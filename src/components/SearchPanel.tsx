@@ -14,18 +14,26 @@ export default function SearchPanel({ library, searching, onSelectFile }: Search
   const sampleImages = useMemo(() => library.slice(0, 4), [library]);
 
   return (
-    <section className="text-center pt-12 pb-10 animate-slide-up">
+    <section className="text-center pt-10 sm:pt-12 pb-10 animate-float-in">
       <div className="max-w-3xl mx-auto">
-        <h2 className="text-[42px] sm:text-[52px] leading-[1.04] font-extrabold tracking-tight text-[var(--color-text)]">
+        <h2 className="text-[34px] sm:text-[52px] leading-[1.04] font-extrabold tracking-tight text-[var(--color-text)]">
           发现视觉相似的
           <span className="gradient-text"> 新世界</span>
         </h2>
-        <p className="mt-5 text-sm sm:text-base text-[var(--color-text-secondary)] max-w-2xl mx-auto leading-relaxed">
+        <p className="mt-4 sm:mt-5 text-sm sm:text-base text-[var(--color-text-secondary)] max-w-2xl mx-auto leading-relaxed px-2">
           上传一张图片，系统会自动分析颜色与纹理特征，并从素材库中返回最相近的 12 个结果。
         </p>
+
+        <div className="mt-5 flex flex-wrap items-center justify-center gap-2 text-[11px] text-[var(--color-text-secondary)]">
+          {['智能特征提取', '12条高相似结果', '本地素材私有存储'].map((item) => (
+            <span key={item} className="px-2.5 py-1 rounded-full border border-[var(--color-border)] bg-[var(--color-surface)]">
+              {item}
+            </span>
+          ))}
+        </div>
       </div>
 
-      <div className="max-w-3xl mx-auto mt-10">
+      <div className="max-w-3xl mx-auto mt-8 sm:mt-10 px-1 sm:px-0">
         <div
           onDrop={(e) => {
             e.preventDefault();
@@ -39,7 +47,7 @@ export default function SearchPanel({ library, searching, onSelectFile }: Search
           }}
           onDragLeave={() => setDragOver(false)}
           onClick={() => fileInputRef.current?.click()}
-          className={`relative rounded-[30px] border border-dashed px-8 py-16 cursor-pointer transition-all shadow-[var(--shadow-lg)] overflow-hidden ${
+          className={`relative rounded-[26px] sm:rounded-[30px] border border-dashed px-5 sm:px-8 py-12 sm:py-16 cursor-pointer transition-all shadow-[var(--shadow-lg)] overflow-hidden ${
             dragOver ? 'border-[var(--color-primary)] bg-[var(--color-primary-bg)]' : 'border-[var(--color-border)] bg-[var(--color-surface)] hover:bg-[var(--color-surface-hover)]'
           }`}
         >
@@ -54,7 +62,7 @@ export default function SearchPanel({ library, searching, onSelectFile }: Search
                 <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" />
               </svg>
             </div>
-            <p className="mt-6 text-xl font-semibold text-[var(--color-text)]">拖拽图片到此处，或点击上传</p>
+            <p className="mt-6 text-lg sm:text-xl font-semibold text-[var(--color-text)]">拖拽图片到此处，或点击上传</p>
             <p className="mt-2 text-xs text-[var(--color-text-tertiary)]">支持 JPG / PNG / WEBP，单图最大 10MB</p>
 
             <button
@@ -94,15 +102,15 @@ export default function SearchPanel({ library, searching, onSelectFile }: Search
         />
       </div>
 
-      <div className="mt-12">
+      <div className="mt-10 sm:mt-12">
         <div className="text-xs text-[var(--color-text-tertiary)]">最近加入的素材预览</div>
-        <div className="mt-3 flex items-center justify-center gap-3">
+        <div className="mt-3 flex items-center justify-center gap-2.5 sm:gap-3 px-2">
           {sampleImages.map((img) => (
-            <div key={img.id} className="w-16 h-16 rounded-xl border border-[var(--color-border)] overflow-hidden bg-[var(--color-surface)] shadow-[var(--shadow-sm)]">
+            <div key={img.id} className="w-14 h-14 sm:w-16 sm:h-16 rounded-xl border border-[var(--color-border)] overflow-hidden bg-[var(--color-surface)] shadow-[var(--shadow-sm)]">
               <img src={img.thumbnail} alt={img.name} className="w-full h-full object-cover" loading="lazy" />
             </div>
           ))}
-          <div className="w-16 h-16 rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] flex items-center justify-center text-xs text-[var(--color-text-tertiary)]">
+          <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] flex items-center justify-center text-xs text-[var(--color-text-tertiary)]">
             +更多
           </div>
         </div>

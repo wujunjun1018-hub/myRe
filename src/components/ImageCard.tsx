@@ -31,7 +31,7 @@ export default function ImageCard({ image, score, colorScore, textureScore, onDe
 
   return (
     <div
-      className="group relative rounded-2xl overflow-hidden border border-[var(--color-border)] bg-[var(--color-surface)] hover:bg-[var(--color-surface-hover)] hover:shadow-[var(--shadow-lg)] transition-all duration-300 cursor-pointer animate-slide-up"
+      className="group relative rounded-2xl overflow-hidden border border-[var(--color-border)] bg-[var(--color-surface)] hover:bg-[var(--color-surface-hover)] hover:shadow-[var(--shadow-lg)] hover:-translate-y-0.5 transition-all duration-300 cursor-pointer animate-slide-up"
       style={{ animationDelay: `${index * 40}ms`, animationFillMode: 'backwards' }}
       onClick={() => onView?.(image)}
       onMouseEnter={() => setHovered(true)}
@@ -42,7 +42,7 @@ export default function ImageCard({ image, score, colorScore, textureScore, onDe
         <img
           src={image.thumbnail}
           alt={image.name}
-          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500 ease-out"
+          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
           loading="lazy"
         />
 
@@ -77,7 +77,7 @@ export default function ImageCard({ image, score, colorScore, textureScore, onDe
       </div>
 
       {/* Info */}
-      <div className="p-4">
+      <div className="p-3.5 sm:p-4">
         <div className="flex items-center gap-2">
           <h3 className="text-sm font-semibold text-[var(--color-text)] truncate leading-snug">{image.name}</h3>
           {score === undefined && (
@@ -86,9 +86,9 @@ export default function ImageCard({ image, score, colorScore, textureScore, onDe
         </div>
 
         {score !== undefined ? (
-          <div className="mt-3 space-y-2.5">
+            <div className="mt-3 space-y-2">
             <div className="flex items-center gap-3">
-              <span className="text-[11px] text-[var(--color-text-tertiary)] w-16">结构相似度</span>
+              <span className="text-[11px] text-[var(--color-text-tertiary)] w-14 sm:w-16">结构相似度</span>
               <div className="flex-1 h-2 rounded-full bg-black/25 overflow-hidden">
                 <div
                   className="h-full rounded-full bg-gradient-to-r from-sky-400 to-blue-500 transition-all duration-500"
@@ -98,7 +98,7 @@ export default function ImageCard({ image, score, colorScore, textureScore, onDe
               <span className="text-[11px] font-semibold text-[var(--color-text)] w-10 text-right tabular-nums">{Math.round((textureScore ?? 0) * 100)}%</span>
             </div>
             <div className="flex items-center gap-3">
-              <span className="text-[11px] text-[var(--color-text-tertiary)] w-16">色彩匹配</span>
+              <span className="text-[11px] text-[var(--color-text-tertiary)] w-14 sm:w-16">色彩匹配</span>
               <div className="flex-1 h-2 rounded-full bg-black/25 overflow-hidden">
                 <div
                   className="h-full rounded-full bg-gradient-to-r from-fuchsia-400 to-violet-500 transition-all duration-500"

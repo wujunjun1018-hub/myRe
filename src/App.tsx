@@ -92,7 +92,7 @@ export default function App() {
       />
 
       <main className="flex-1 overflow-y-auto">
-        <div className="max-w-[1600px] mx-auto p-6">
+        <div className="max-w-[1600px] mx-auto px-4 sm:px-6 py-5 sm:py-6">
           {!queryImage && (
             <SearchPanel
               library={images}
@@ -102,7 +102,7 @@ export default function App() {
           )}
 
           {queryImage && (
-            <section className="space-y-6 animate-fade-in">
+            <section className="space-y-5 sm:space-y-6 animate-fade-in">
               <div className="rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)] px-5 py-4 shadow-[var(--shadow-md)] flex flex-wrap items-center justify-between gap-4">
                 <div className="flex items-center gap-3">
                   <span className="inline-flex w-2 h-2 rounded-full bg-emerald-400" />
@@ -110,18 +110,18 @@ export default function App() {
                     {searching ? '正在分析图片特征...' : `匹配完成，找到 ${searchResults.length} 个结果`}
                   </span>
                 </div>
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 w-full sm:w-auto">
                   <button
                     type="button"
                     onClick={() => queryInputRef.current?.click()}
-                    className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-[var(--color-surface-hover)] border border-[var(--color-border)] text-sm text-[var(--color-text)] hover:bg-[var(--color-surface)] transition-all"
+                    className="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-xl bg-[var(--color-surface-hover)] border border-[var(--color-border)] text-sm text-[var(--color-text)] hover:bg-[var(--color-surface)] transition-all flex-1 sm:flex-none"
                   >
                     重新上传
                   </button>
                   <button
                     type="button"
                     onClick={handleResetQuery}
-                    className="inline-flex items-center gap-2 px-4 py-2 rounded-xl border border-[var(--color-border)] text-sm text-[var(--color-text-secondary)] hover:text-[var(--color-text)] hover:bg-[var(--color-surface-hover)] transition-all"
+                    className="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-xl border border-[var(--color-border)] text-sm text-[var(--color-text-secondary)] hover:text-[var(--color-text)] hover:bg-[var(--color-surface-hover)] transition-all flex-1 sm:flex-none"
                   >
                     重新开始
                   </button>
@@ -139,7 +139,7 @@ export default function App() {
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 xl:grid-cols-[320px_minmax(0,1fr)] gap-6 items-start">
+              <div className="grid grid-cols-1 xl:grid-cols-[320px_minmax(0,1fr)] gap-5 sm:gap-6 items-start">
                 <aside className="rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)] p-4 shadow-[var(--shadow-md)] xl:sticky xl:top-24">
                   <div className="text-[11px] font-semibold tracking-wide text-[var(--color-text-tertiary)]">SOURCE IMAGE</div>
                   <div className="mt-3 rounded-xl overflow-hidden border border-[var(--color-border)] bg-black/20">
@@ -186,6 +186,7 @@ export default function App() {
                   </div>
                   <ImageGrid
                     searchResults={searchResults}
+                    loading={searching}
                     onView={setDetailImage}
                     emptyMessage={searching ? '分析中...' : '暂无匹配'}
                     emptySubMessage={images.length === 0 ? '请先点击右上角设置按钮上传素材到资源库' : '换一张图片试试'}

@@ -6,7 +6,7 @@ interface HeaderProps {
 export default function Header({ imageCount, onOpenLibrary }: HeaderProps) {
   return (
     <header className="glass sticky top-0 z-30 border-b border-[var(--color-border)]">
-      <div className="max-w-[1600px] mx-auto px-6 h-16 flex items-center justify-between">
+      <div className="max-w-[1600px] mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
         <div className="flex items-center gap-3">
           <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-[var(--color-primary)] to-[var(--color-primary-dark)] flex items-center justify-center shadow-[var(--shadow-md)]">
             <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -16,11 +16,11 @@ export default function Header({ imageCount, onOpenLibrary }: HeaderProps) {
           </div>
           <div className="leading-tight">
             <h1 className="text-base font-bold text-[var(--color-text)]">VisionMatch</h1>
-            <p className="text-[11px] text-[var(--color-text-tertiary)]">Search by image similarity</p>
+            <p className="hidden sm:block text-[11px] text-[var(--color-text-tertiary)]">Search by image similarity</p>
           </div>
-          <div className="hidden sm:flex items-center gap-1.5 ml-3 px-2.5 py-1 rounded-full bg-[var(--color-surface)] border border-[var(--color-border)]">
+          <div className="flex items-center gap-1.5 ml-1 sm:ml-3 px-2 py-1 rounded-full bg-[var(--color-surface)] border border-[var(--color-border)]">
             <div className="w-1.5 h-1.5 rounded-full bg-[var(--color-success)] animate-pulse" />
-            <span className="text-xs font-medium text-[var(--color-text-secondary)]">{imageCount} 素材</span>
+            <span className="text-[11px] sm:text-xs font-medium text-[var(--color-text-secondary)]">{imageCount} 素材</span>
           </div>
         </div>
 
