@@ -27,7 +27,7 @@ export default function ImageCard({ image, score, colorScore, textureScore, onDe
   })();
 
   const tags = (image.tags?.length ? image.tags.map((t) => (t.startsWith('#') ? t : `#${t}`)) : []).slice(0, 2);
-  const displayTags = (tags.length > 0 ? tags : autoTags).slice(0, 2);
+  const displayTags = (tags.length > 0 ? tags : autoTags).slice(0, 2).join('  ');
 
   return (
     <div
@@ -86,7 +86,7 @@ export default function ImageCard({ image, score, colorScore, textureScore, onDe
         </div>
 
         {score !== undefined ? (
-          <div className="mt-3 space-y-2">
+          <div className="mt-3 space-y-2.5">
             <div className="flex items-center gap-3">
               <span className="text-[11px] text-[var(--color-text-tertiary)] w-16">结构相似度</span>
               <div className="flex-1 h-2 rounded-full bg-black/25 overflow-hidden">
@@ -108,13 +108,7 @@ export default function ImageCard({ image, score, colorScore, textureScore, onDe
               <span className="text-[11px] font-semibold text-[var(--color-text)] w-10 text-right tabular-nums">{Math.round((colorScore ?? 0) * 100)}%</span>
             </div>
 
-            <div className="pt-1 flex items-center gap-2">
-              {displayTags.map((t) => (
-                <span key={t} className="text-[10px] px-2 py-1 rounded-lg border border-[var(--color-border)] bg-black/15 text-[var(--color-text-tertiary)]">
-                  {t}
-                </span>
-              ))}
-            </div>
+            <div className="pt-0.5 text-[10px] text-[var(--color-text-tertiary)] truncate">{displayTags}</div>
           </div>
         ) : (
           <div className="mt-2 flex items-center gap-2">
