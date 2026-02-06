@@ -1,26 +1,26 @@
 @import "tailwindcss";
 
 :root {
-  --color-primary: #6366F1;
-  --color-primary-light: #818CF8;
-  --color-primary-dark: #4F46E5;
-  --color-primary-bg: #EEF2FF;
-  --color-bg: #F8FAFC;
-  --color-surface: #FFFFFF;
-  --color-surface-hover: #F1F5F9;
-  --color-text: #0F172A;
-  --color-text-secondary: #64748B;
-  --color-text-tertiary: #94A3B8;
-  --color-border: #E2E8F0;
-  --color-border-light: #F1F5F9;
+  --color-primary: #3B82F6;
+  --color-primary-light: #60A5FA;
+  --color-primary-dark: #2563EB;
+  --color-primary-bg: rgba(59, 130, 246, 0.12);
+  --color-bg: #0B0E14;
+  --color-surface: rgba(255, 255, 255, 0.06);
+  --color-surface-hover: rgba(255, 255, 255, 0.09);
+  --color-text: #E5E7EB;
+  --color-text-secondary: rgba(229, 231, 235, 0.72);
+  --color-text-tertiary: rgba(229, 231, 235, 0.48);
+  --color-border: rgba(255, 255, 255, 0.10);
+  --color-border-light: rgba(255, 255, 255, 0.06);
   --color-accent: #F59E0B;
-  --color-accent-light: #FEF3C7;
+  --color-accent-light: rgba(245, 158, 11, 0.16);
   --color-success: #10B981;
   --color-danger: #EF4444;
-  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.07), 0 2px 4px -2px rgb(0 0 0 / 0.05);
-  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.08), 0 4px 6px -4px rgb(0 0 0 / 0.04);
-  --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.06);
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.25);
+  --shadow-md: 0 10px 20px -12px rgb(0 0 0 / 0.55);
+  --shadow-lg: 0 18px 36px -20px rgb(0 0 0 / 0.70);
+  --shadow-xl: 0 28px 56px -28px rgb(0 0 0 / 0.75);
   --radius-sm: 6px;
   --radius-md: 10px;
   --radius-lg: 16px;
@@ -34,12 +34,24 @@
 }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Segoe UI", system-ui, sans-serif;
+  font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
   background-color: var(--color-bg);
   color: var(--color-text);
   min-height: 100vh;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background:
+    radial-gradient(1200px 600px at 50% 30%, rgba(59, 130, 246, 0.20), transparent 60%),
+    radial-gradient(900px 520px at 20% 70%, rgba(16, 185, 129, 0.16), transparent 62%),
+    radial-gradient(900px 520px at 80% 75%, rgba(245, 158, 11, 0.10), transparent 58%),
+    linear-gradient(180deg, #070A0F, #0B0E14 35%, #070A0F 100%);
 }
 
 #root {
@@ -55,11 +67,11 @@ body {
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: var(--color-border);
+  background: rgba(255, 255, 255, 0.14);
   border-radius: 99px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--color-text-tertiary);
+  background: rgba(255, 255, 255, 0.22);
 }
 
 /* Range slider styling */
@@ -80,7 +92,7 @@ input[type="range"]::-webkit-slider-thumb {
   border-radius: 50%;
   background: var(--color-primary);
   cursor: pointer;
-  border: 3px solid white;
+  border: 3px solid rgba(12, 14, 20, 0.9);
   box-shadow: var(--shadow-md);
   transition: transform 0.15s ease;
 }
@@ -95,7 +107,7 @@ input[type="range"]::-moz-range-thumb {
   border-radius: 50%;
   background: var(--color-primary);
   cursor: pointer;
-  border: 3px solid white;
+  border: 3px solid rgba(12, 14, 20, 0.9);
   box-shadow: var(--shadow-md);
 }
 
@@ -136,12 +148,12 @@ input[type="range"]::-moz-range-thumb {
 .glass {
   backdrop-filter: blur(20px) saturate(180%);
   -webkit-backdrop-filter: blur(20px) saturate(180%);
-  background: rgba(255, 255, 255, 0.85);
+  background: rgba(12, 14, 20, 0.60);
 }
 
 /* Gradient text */
 .gradient-text {
-  background: linear-gradient(135deg, var(--color-primary), var(--color-primary-light));
+  background: linear-gradient(90deg, #E5E7EB 0%, #93C5FD 40%, #A78BFA 72%, #FDE68A 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
