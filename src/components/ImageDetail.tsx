@@ -36,117 +36,84 @@ export default function ImageDetail({ image, onClose }: ImageDetailProps) {
     return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
   };
 
-  const textureFeatures = [
-    { label: '边缘密度', value: image.features.textureFeatures.edgeDensity, color: 'from-violet-400 to-violet-500' },
-    { label: '粗糙度', value: image.features.textureFeatures.coarseness, color: 'from-amber-400 to-amber-500' },
-    { label: '对比度', value: image.features.textureFeatures.contrast, color: 'from-blue-400 to-blue-500' },
-    { label: '规律性', value: image.features.textureFeatures.regularity, color: 'from-emerald-400 to-emerald-500' },
-  ];
-
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 animate-fade-in" onClick={onClose}>
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70" onClick={onClose}>
       <div
-        className="bg-white rounded-2xl shadow-[var(--shadow-xl)] max-w-5xl max-h-[90vh] w-full mx-4 overflow-hidden flex animate-scale-in"
+        className="bg-[var(--color-bg)] rounded-xl max-w-4xl max-h-[90vh] w-full mx-4 overflow-hidden flex flex-col sm:flex-row animate-scale-in border border-[var(--color-border)]"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Image */}
-        <div className="flex-1 bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center min-w-0 p-4 relative">
+        <div className="flex-1 bg-[var(--color-surface)] flex items-center justify-center min-h-[300px] sm:min-h-0 p-4">
           <img
             src={fullUrl ?? image.thumbnail}
             alt={image.name}
-            className="max-w-full max-h-[82vh] object-contain rounded-xl shadow-lg"
+            className="max-w-full max-h-[50vh] sm:max-h-[80vh] object-contain rounded-lg"
           />
         </div>
 
         {/* Info sidebar */}
-        <div className="w-80 shrink-0 border-l border-[var(--color-border)] flex flex-col">
+        <div className="w-full sm:w-72 shrink-0 border-t sm:border-t-0 sm:border-l border-[var(--color-border)] flex flex-col">
           {/* Header */}
-          <div className="p-5 pb-4 border-b border-[var(--color-border)]">
-            <div className="flex items-start justify-between gap-3">
-              <div className="min-w-0">
-                <h2 className="text-base font-bold text-[var(--color-text)] truncate">{image.name}</h2>
-              </div>
-              <button
-                onClick={onClose}
-                className="w-8 h-8 rounded-lg flex items-center justify-center text-[var(--color-text-tertiary)] hover:text-[var(--color-text)] hover:bg-[var(--color-surface-hover)] transition-colors shrink-0"
-              >
-                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-                </svg>
-              </button>
-            </div>
+          <div className="flex items-center justify-between p-4 border-b border-[var(--color-border)]">
+            <h2 className="text-sm font-medium text-[var(--color-text)] truncate pr-4">{image.name}</h2>
+            <button
+              onClick={onClose}
+              className="w-8 h-8 flex items-center justify-center text-[var(--color-text-tertiary)] hover:text-[var(--color-text)] hover:bg-[var(--color-surface)] rounded-lg transition-colors"
+            >
+              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
           </div>
 
-          {/* Scrollable content */}
-          <div className="flex-1 overflow-y-auto p-5 space-y-5">
-            {/* File info */}
-            <div className="grid grid-cols-2 gap-3">
-              {[
-                { label: '尺寸', value: `${image.width} x ${image.height}` },
-                { label: '大小', value: formatSize(image.fileSize) },
-              ].map((item) => (
-                <div key={item.label} className="bg-[var(--color-surface-hover)] rounded-xl p-3">
-                  <span className="text-[11px] text-[var(--color-text-tertiary)] block">{item.label}</span>
-                  <span className="text-sm font-semibold text-[var(--color-text)] mt-0.5 block">{item.value}</span>
-                </div>
-              ))}
-            </div>
-
-            <div className="bg-[var(--color-surface-hover)] rounded-xl p-3">
-              <span className="text-[11px] text-[var(--color-text-tertiary)]">上传时间</span>
-              <span className="text-sm font-medium text-[var(--color-text)] mt-0.5 block">
-                {new Date(image.createdAt).toLocaleString('zh-CN')}
-              </span>
-            </div>
-
-            {/* Color analysis */}
-            <div>
-              <h3 className="text-xs font-bold text-[var(--color-text-tertiary)] uppercase tracking-wider mb-3">色彩分析</h3>
-              <div className="space-y-3">
-                <div className="flex items-center gap-3">
-                  <div
-                    className="w-10 h-10 rounded-xl border border-[var(--color-border)] shadow-inner"
-                    style={{ backgroundColor: `rgb(${image.features.avgColor.join(',')})` }}
-                  />
-                  <div>
-                    <span className="text-[11px] text-[var(--color-text-tertiary)] block">平均颜色</span>
-                    <span className="text-xs font-mono font-medium text-[var(--color-text)]">
-                      RGB({image.features.avgColor.join(', ')})
-                    </span>
-                  </div>
-                </div>
-
-                <div>
-                  <span className="text-[11px] text-[var(--color-text-tertiary)] mb-2 block">主要色调</span>
-                  <div className="flex items-center gap-0">
-                    {image.features.colorHistogram.dominantColors.map((c, i) => (
-                      <div
-                        key={i}
-                        className="flex-1 h-8 first:rounded-l-xl last:rounded-r-xl border-r border-white/30 last:border-r-0"
-                        style={{ backgroundColor: `hsl(${c[0]}, ${c[1] * 100}%, ${c[2] * 100}%)` }}
-                        title={`HSL(${Math.round(c[0])}, ${Math.round(c[1] * 100)}%, ${Math.round(c[2] * 100)}%)`}
-                      />
-                    ))}
-                  </div>
-                </div>
+          {/* Info */}
+          <div className="flex-1 overflow-y-auto p-4 space-y-4">
+            {/* Basic info */}
+            <div className="space-y-2 text-sm">
+              <div className="flex justify-between">
+                <span className="text-[var(--color-text-tertiary)]">尺寸</span>
+                <span className="text-[var(--color-text)]">{image.width} × {image.height}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-[var(--color-text-tertiary)]">大小</span>
+                <span className="text-[var(--color-text)]">{formatSize(image.fileSize)}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-[var(--color-text-tertiary)]">上传时间</span>
+                <span className="text-[var(--color-text)]">{new Date(image.createdAt).toLocaleDateString('zh-CN')}</span>
               </div>
             </div>
 
-            {/* Texture analysis */}
+            {/* Color palette */}
             <div>
-              <h3 className="text-xs font-bold text-[var(--color-text-tertiary)] uppercase tracking-wider mb-3">纹理特征</h3>
-              <div className="space-y-3">
-                {textureFeatures.map((feat) => (
+              <div className="text-xs text-[var(--color-text-tertiary)] mb-2">主色调</div>
+              <div className="flex rounded-lg overflow-hidden h-8">
+                {image.features.colorHistogram.dominantColors.map((c, i) => (
+                  <div
+                    key={i}
+                    className="flex-1"
+                    style={{ backgroundColor: `hsl(${c[0]}, ${c[1] * 100}%, ${c[2] * 100}%)` }}
+                  />
+                ))}
+              </div>
+            </div>
+
+            {/* Features */}
+            <div>
+              <div className="text-xs text-[var(--color-text-tertiary)] mb-2">纹理特征</div>
+              <div className="space-y-2">
+                {[
+                  { label: '边缘密度', value: image.features.textureFeatures.edgeDensity },
+                  { label: '对比度', value: image.features.textureFeatures.contrast },
+                  { label: '规律性', value: image.features.textureFeatures.regularity },
+                ].map((feat) => (
                   <div key={feat.label}>
-                    <div className="flex items-center justify-between mb-1">
-                      <span className="text-xs text-[var(--color-text-secondary)]">{feat.label}</span>
-                      <span className="text-xs font-bold text-[var(--color-text)] tabular-nums">{Math.round(feat.value * 100)}%</span>
+                    <div className="flex justify-between text-xs mb-1">
+                      <span className="text-[var(--color-text-secondary)]">{feat.label}</span>
+                      <span className="text-[var(--color-text)]">{Math.round(feat.value * 100)}%</span>
                     </div>
-                    <div className="w-full bg-[var(--color-surface-hover)] rounded-full h-2 overflow-hidden">
-                      <div
-                        className={`h-full bg-gradient-to-r ${feat.color} rounded-full transition-all duration-700`}
-                        style={{ width: `${feat.value * 100}%` }}
-                      />
+                    <div className="w-full bg-[var(--color-surface-elevated)] rounded-full h-1 overflow-hidden">
+                      <div className="h-full bg-[var(--color-primary)] rounded-full" style={{ width: `${feat.value * 100}%` }} />
                     </div>
                   </div>
                 ))}
