@@ -93,7 +93,7 @@ export default function App() {
             <ImageGrid
               searchResults={searchResults}
               onView={setDetailImage}
-              emptyMessage="以图搜图"
+              emptyMessage="搜图SOU"
               emptySubMessage="上传一张材质图片，搜索资源库中相似的板材花纹和材质"
             />
           )}
