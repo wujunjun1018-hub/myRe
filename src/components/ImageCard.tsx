@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import type { MaterialImage } from '../types';
 
 interface ImageCardProps {
@@ -12,51 +11,45 @@ interface ImageCardProps {
 }
 
 export default function ImageCard({ image, score, colorScore, textureScore, onDelete, onView, index = 0 }: ImageCardProps) {
-  const [hovered, setHovered] = useState(false);
-
   const scorePercent = score !== undefined ? Math.round(score * 100) : null;
-  const scoreColor = scorePercent !== null
-    ? scorePercent >= 80 ? 'from-emerald-400 to-emerald-500'
-    : scorePercent >= 60 ? 'from-amber-400 to-amber-500'
-    : 'from-[var(--color-primary-light)] to-[var(--color-primary)]'
-    : '';
+
+  const getScoreStyle = (pct: number) => {
+    if (pct >= 80) return { bg: 'bg-[var(--color-success)]', text: 'text-[var(--color-success)]' };
+    if (pct >= 60) return { bg: 'bg-[var(--color-warning)]', text: 'text-[var(--color-warning)]' };
+    return { bg: 'bg-[var(--color-primary)]', text: 'text-[var(--color-primary)]' };
+  };
 
   return (
     <div
-      className="group relative bg-white rounded-2xl overflow-hidden border border-[var(--color-border)] hover:border-[var(--color-primary)]/30 hover:shadow-[var(--shadow-lg)] transition-all duration-300 cursor-pointer animate-slide-up"
-      style={{ animationDelay: `${index * 40}ms`, animationFillMode: 'backwards' }}
+      className="card-premium group relative overflow-hidden cursor-pointer animate-slide-up"
+      style={{ animationDelay: `${index * 50}ms`, animationFillMode: 'backwards' }}
       onClick={() => onView?.(image)}
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
     >
-      {/* Image container */}
-      <div className="aspect-[4/3] overflow-hidden bg-gradient-to-br from-[var(--color-surface-hover)] to-[var(--color-border-light)] relative">
+      {/* Image */}
+      <div className="aspect-[4/3] overflow-hidden bg-[var(--color-bg-warm)] relative">
         <img
           src={image.thumbnail}
           alt={image.name}
-          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500 ease-out"
+          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
           loading="lazy"
         />
 
-        {/* Gradient overlay on hover */}
-        <div className={`absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent transition-opacity duration-300 ${hovered ? 'opacity-100' : 'opacity-0'}`} />
+        {/* Dark gradient overlay */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-black/0 to-black/0 opacity-0 group-hover:opacity-100 transition-opacity duration-400" />
 
         {/* Score badge */}
         {scorePercent !== null && (
-          <div className={`absolute top-3 right-3 bg-gradient-to-r ${scoreColor} text-white text-xs font-bold px-2.5 py-1 rounded-lg shadow-lg flex items-center gap-1`}>
-            <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
-              <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z" clipRule="evenodd" />
-            </svg>
+          <div className={`absolute top-2.5 right-2.5 ${getScoreStyle(scorePercent).bg} text-white text-[11px] font-bold px-2 py-1 rounded-lg shadow-lg flex items-center gap-1 backdrop-blur-sm`}>
             {scorePercent}%
           </div>
         )}
 
-        {/* Rank badge for top 3 */}
+        {/* Rank medal for top 3 */}
         {score !== undefined && index < 3 && (
-          <div className={`absolute top-3 left-3 w-7 h-7 rounded-lg flex items-center justify-center text-xs font-bold text-white shadow-lg ${
-            index === 0 ? 'bg-gradient-to-br from-yellow-400 to-amber-500' :
-            index === 1 ? 'bg-gradient-to-br from-gray-300 to-gray-400' :
-            'bg-gradient-to-br from-amber-600 to-amber-700'
+          <div className={`absolute top-2.5 left-2.5 w-7 h-7 rounded-full flex items-center justify-center text-[11px] font-bold text-white shadow-lg ring-2 ring-white/30 ${
+            index === 0 ? 'bg-gradient-to-b from-[#F5D060] to-[#D4A24C]' :
+            index === 1 ? 'bg-gradient-to-b from-[#C0C0C0] to-[#9E9E9E]' :
+            'bg-gradient-to-b from-[#CD7F32] to-[#A0642C]'
           }`}>
             {index + 1}
           </div>
@@ -65,11 +58,8 @@ export default function ImageCard({ image, score, colorScore, textureScore, onDe
         {/* Delete button */}
         {onDelete && (
           <button
-            onClick={(e) => {
-              e.stopPropagation();
-              onDelete(image.id, image.blobKey);
-            }}
-            className="absolute top-3 left-3 opacity-0 group-hover:opacity-100 bg-white/90 hover:bg-red-500 hover:text-white text-[var(--color-text-secondary)] w-7 h-7 rounded-lg flex items-center justify-center transition-all duration-200 shadow-md"
+            onClick={(e) => { e.stopPropagation(); onDelete(image.id, image.blobKey); }}
+            className="absolute top-2.5 left-2.5 opacity-0 group-hover:opacity-100 bg-white/95 hover:bg-[var(--color-danger)] hover:text-white text-[var(--color-text-secondary)] w-7 h-7 rounded-full flex items-center justify-center transition-all duration-200 shadow-md"
             title="删除"
           >
             <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -78,14 +68,13 @@ export default function ImageCard({ image, score, colorScore, textureScore, onDe
           </button>
         )}
 
-        {/* Hover info overlay */}
-        <div className={`absolute bottom-0 left-0 right-0 p-3 transition-all duration-300 ${hovered ? 'translate-y-0 opacity-100' : 'translate-y-2 opacity-0'}`}>
-          {/* Color swatches */}
-          <div className="flex items-center gap-1">
-            {image.features.colorHistogram.dominantColors.slice(0, 5).map((c, i) => (
+        {/* Color swatches on hover */}
+        <div className="absolute bottom-0 left-0 right-0 p-2.5 translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out">
+          <div className="flex items-center gap-[2px]">
+            {image.features.colorHistogram.dominantColors.slice(0, 6).map((c, i) => (
               <div
                 key={i}
-                className="w-5 h-5 rounded-md border-2 border-white/60 shadow-sm"
+                className="flex-1 h-[6px] first:rounded-l-full last:rounded-r-full shadow-sm"
                 style={{ backgroundColor: `hsl(${c[0]}, ${c[1] * 100}%, ${c[2] * 100}%)` }}
               />
             ))}
@@ -94,45 +83,38 @@ export default function ImageCard({ image, score, colorScore, textureScore, onDe
       </div>
 
       {/* Info */}
-      <div className="p-3">
-        <h3 className="text-sm font-semibold text-[var(--color-text)] truncate leading-snug">{image.name}</h3>
-        <div className="flex items-center gap-2 mt-1.5">
+      <div className="p-3.5">
+        <div className="flex items-start justify-between gap-2">
+          <h3 className="text-[13px] font-semibold text-[var(--color-text)] truncate leading-snug flex-1">{image.name}</h3>
           <div
-            className="w-3.5 h-3.5 rounded-full border border-[var(--color-border)] shadow-inner"
+            className="w-4 h-4 rounded-full border border-[var(--color-border)] shrink-0 shadow-inner mt-0.5"
             style={{ backgroundColor: `rgb(${image.features.avgColor.join(',')})` }}
           />
-          <span className="text-[11px] text-[var(--color-text-tertiary)] ml-auto">
-            {image.width}x{image.height}
-          </span>
         </div>
+        <p className="text-[11px] text-[var(--color-text-tertiary)] mt-1">
+          {image.width} x {image.height}
+        </p>
 
-        {/* Score details - always visible for search results */}
+        {/* Score breakdown - always visible */}
         {score !== undefined && (
-          <div className="mt-2.5 pt-2.5 border-t border-[var(--color-border-light)] space-y-1.5">
-            <div className="flex items-center gap-2">
-              <span className="text-[11px] text-[var(--color-text-tertiary)] w-8">色彩</span>
-              <div className="flex-1 bg-[var(--color-surface-hover)] rounded-full h-1.5 overflow-hidden">
-                <div
-                  className="h-full bg-gradient-to-r from-amber-400 to-orange-400 rounded-full transition-all duration-500"
-                  style={{ width: `${(colorScore ?? 0) * 100}%` }}
-                />
+          <div className="mt-3 pt-3 border-t border-[var(--color-border-light)] space-y-2">
+            {[
+              { label: '色彩', value: colorScore ?? 0, color: 'bg-gradient-to-r from-[#D4A24C] to-[#C8956C]' },
+              { label: '纹理', value: textureScore ?? 0, color: 'bg-gradient-to-r from-[var(--color-accent)] to-[var(--color-accent-light)]' },
+            ].map(({ label, value, color }) => (
+              <div key={label} className="flex items-center gap-2">
+                <span className="text-[10px] text-[var(--color-text-tertiary)] w-6 shrink-0">{label}</span>
+                <div className="flex-1 bg-[var(--color-border-light)] rounded-full h-[5px] overflow-hidden">
+                  <div
+                    className={`h-full ${color} rounded-full transition-all duration-700 ease-out`}
+                    style={{ width: `${value * 100}%` }}
+                  />
+                </div>
+                <span className="text-[10px] font-bold text-[var(--color-text-secondary)] w-6 text-right tabular-nums">
+                  {Math.round(value * 100)}
+                </span>
               </div>
-              <span className="text-[11px] font-semibold text-[var(--color-text)] w-7 text-right tabular-nums">
-                {Math.round((colorScore ?? 0) * 100)}
-              </span>
-            </div>
-            <div className="flex items-center gap-2">
-              <span className="text-[11px] text-[var(--color-text-tertiary)] w-8">纹理</span>
-              <div className="flex-1 bg-[var(--color-surface-hover)] rounded-full h-1.5 overflow-hidden">
-                <div
-                  className="h-full bg-gradient-to-r from-[var(--color-primary-light)] to-[var(--color-primary)] rounded-full transition-all duration-500"
-                  style={{ width: `${(textureScore ?? 0) * 100}%` }}
-                />
-              </div>
-              <span className="text-[11px] font-semibold text-[var(--color-text)] w-7 text-right tabular-nums">
-                {Math.round((textureScore ?? 0) * 100)}
-              </span>
-            </div>
+            ))}
           </div>
         )}
       </div>

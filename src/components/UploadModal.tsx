@@ -113,20 +113,23 @@ export default function UploadModal({ open, onClose, onUploaded }: UploadModalPr
   if (!open) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 animate-fade-in" onClick={handleClose}>
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm animate-fade-in" onClick={handleClose}>
       <div
-        className="bg-white rounded-2xl shadow-[var(--shadow-xl)] w-full max-w-2xl max-h-[85vh] overflow-hidden flex flex-col animate-scale-in"
+        className="bg-white rounded-2xl shadow-[var(--shadow-xl)] w-full max-w-2xl max-h-[85vh] overflow-hidden flex flex-col animate-scale-in border border-[var(--color-border)]"
         onClick={(e) => e.stopPropagation()}
       >
+        {/* Top accent line */}
+        <div className="h-[3px] bg-gradient-to-r from-[var(--color-primary)] via-[var(--color-primary-light)] to-[var(--color-accent)]" />
+
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-[var(--color-border)]">
+        <div className="flex items-center justify-between px-7 py-5 border-b border-[var(--color-border-light)]">
           <div>
-            <h2 className="text-lg font-bold text-[var(--color-text)]">上传素材</h2>
-            <p className="text-xs text-[var(--color-text-tertiary)] mt-0.5">添加木板材质图片到资源库</p>
+            <h2 className="text-[17px] font-bold text-[var(--color-text)]">上传素材</h2>
+            <p className="text-[12px] text-[var(--color-text-tertiary)] mt-0.5">添加木板材质图片到资源库</p>
           </div>
           <button
             onClick={handleClose}
-            className="w-8 h-8 rounded-lg flex items-center justify-center text-[var(--color-text-tertiary)] hover:text-[var(--color-text)] hover:bg-[var(--color-surface-hover)] transition-colors"
+            className="w-9 h-9 rounded-xl flex items-center justify-center text-[var(--color-text-tertiary)] hover:text-[var(--color-text)] hover:bg-[var(--color-surface-hover)] transition-all"
           >
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
@@ -135,29 +138,29 @@ export default function UploadModal({ open, onClose, onUploaded }: UploadModalPr
         </div>
 
         {/* Content */}
-        <div className="flex-1 overflow-y-auto p-6">
+        <div className="flex-1 overflow-y-auto p-7">
           {/* Drop zone */}
           <div
             onDrop={handleDrop}
             onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
             onDragLeave={() => setDragOver(false)}
             onClick={() => fileInputRef.current?.click()}
-            className={`border-2 border-dashed rounded-2xl p-10 text-center transition-all duration-300 cursor-pointer ${
+            className={`border-2 border-dashed rounded-2xl p-12 text-center transition-all duration-300 cursor-pointer ${
               dragOver
                 ? 'border-[var(--color-primary)] bg-[var(--color-primary-bg)] scale-[1.01]'
-                : 'border-[var(--color-border)] hover:border-[var(--color-primary)]/50 hover:bg-[var(--color-surface-hover)]'
+                : 'border-[var(--color-border)] hover:border-[var(--color-primary)] hover:bg-[var(--color-primary-bg)]'
             }`}
           >
-            <div className="w-16 h-16 rounded-2xl bg-[var(--color-primary-bg)] flex items-center justify-center mx-auto mb-4">
+            <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-[var(--color-primary-bg)] to-[var(--color-bg-warm)] flex items-center justify-center mx-auto mb-4 border border-[var(--color-border-light)]">
               <svg className="w-8 h-8 text-[var(--color-primary)]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                 <path strokeLinecap="round" strokeLinejoin="round"
                   d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" />
               </svg>
             </div>
-            <p className="text-sm font-medium text-[var(--color-text)]">
+            <p className="text-[13px] font-semibold text-[var(--color-text)]">
               拖拽图片到此处，或 <span className="text-[var(--color-primary)]">点击选择文件</span>
             </p>
-            <p className="text-xs text-[var(--color-text-tertiary)] mt-1.5">
+            <p className="text-[11px] text-[var(--color-text-tertiary)] mt-2">
               支持 JPG、PNG、WebP 格式，可批量上传
             </p>
             <input
@@ -172,10 +175,10 @@ export default function UploadModal({ open, onClose, onUploaded }: UploadModalPr
 
           {/* Pending files */}
           {pendingFiles.length > 0 && (
-            <div className="mt-5 space-y-2.5">
+            <div className="mt-6 space-y-2.5">
               <div className="flex items-center justify-between">
-                <span className="text-sm font-semibold text-[var(--color-text)]">待上传文件</span>
-                <span className="text-xs text-[var(--color-text-tertiary)]">{pendingFiles.length} 个</span>
+                <span className="text-[13px] font-semibold text-[var(--color-text)]">待上传文件</span>
+                <span className="text-[11px] text-[var(--color-text-tertiary)] bg-[var(--color-bg-warm)] px-2 py-0.5 rounded-md">{pendingFiles.length} 个</span>
               </div>
               {pendingFiles.map((pf, idx) => (
                 <div key={idx} className="flex items-center gap-3 p-3 bg-[var(--color-surface-hover)] rounded-xl border border-[var(--color-border-light)] hover:border-[var(--color-border)] transition-colors">
@@ -185,13 +188,13 @@ export default function UploadModal({ open, onClose, onUploaded }: UploadModalPr
                       type="text"
                       value={pf.name}
                       onChange={(e) => updatePending(idx, { name: e.target.value })}
-                      className="w-full text-sm bg-white border border-[var(--color-border)] rounded-lg px-3 py-1.5 focus:outline-none focus:border-[var(--color-primary)] focus:ring-2 focus:ring-[var(--color-primary)]/10 transition-all"
+                      className="w-full text-[13px] bg-white border border-[var(--color-border)] rounded-lg px-3 py-2 focus:outline-none focus:border-[var(--color-primary)] focus:ring-2 focus:ring-[var(--color-primary)]/10 transition-all"
                       placeholder="素材名称"
                     />
                   </div>
                   <button
                     onClick={() => removePending(idx)}
-                    className="w-8 h-8 rounded-lg flex items-center justify-center text-[var(--color-text-tertiary)] hover:text-[var(--color-danger)] hover:bg-red-50 transition-all shrink-0"
+                    className="w-8 h-8 rounded-lg flex items-center justify-center text-[var(--color-text-tertiary)] hover:text-[var(--color-danger)] hover:bg-[var(--color-danger)]/5 transition-all shrink-0"
                   >
                     <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                       <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
@@ -204,13 +207,10 @@ export default function UploadModal({ open, onClose, onUploaded }: UploadModalPr
 
           {/* Progress */}
           {uploading && (
-            <div className="mt-5 p-4 bg-[var(--color-primary-bg)] rounded-xl animate-fade-in">
-              <div className="flex items-center justify-between text-sm mb-2">
+            <div className="mt-6 p-5 bg-[var(--color-primary-bg)] rounded-xl border border-[var(--color-primary)]/10 animate-fade-in">
+              <div className="flex items-center justify-between text-[13px] mb-3">
                 <span className="font-medium text-[var(--color-primary)] flex items-center gap-2">
-                  <svg className="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
-                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
-                  </svg>
+                  <div className="w-4 h-4 border-2 border-[var(--color-primary)] border-t-transparent rounded-full animate-spin" />
                   正在处理图片特征...
                 </span>
                 <span className="font-bold text-[var(--color-primary)] tabular-nums">{Math.round(progress)}%</span>
@@ -226,18 +226,18 @@ export default function UploadModal({ open, onClose, onUploaded }: UploadModalPr
         </div>
 
         {/* Footer */}
-        <div className="px-6 py-4 border-t border-[var(--color-border)] flex items-center justify-end gap-3 bg-[var(--color-surface-hover)]/50">
+        <div className="px-7 py-5 border-t border-[var(--color-border-light)] flex items-center justify-end gap-3 bg-[var(--color-surface-alt)]">
           <button
             onClick={handleClose}
             disabled={uploading}
-            className="px-5 py-2.5 text-sm font-medium text-[var(--color-text-secondary)] hover:text-[var(--color-text)] hover:bg-white rounded-xl transition-all disabled:opacity-50 border border-transparent hover:border-[var(--color-border)]"
+            className="px-5 py-2.5 text-[13px] font-medium text-[var(--color-text-secondary)] hover:text-[var(--color-text)] rounded-xl transition-all disabled:opacity-50 border border-[var(--color-border)] hover:border-[var(--color-border-dark)] bg-white"
           >
             取消
           </button>
           <button
             onClick={handleUpload}
             disabled={uploading || pendingFiles.length === 0}
-            className="px-6 py-2.5 text-sm font-medium bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-primary-dark)] text-white rounded-xl hover:shadow-lg hover:shadow-[var(--color-primary)]/25 active:scale-[0.97] transition-all disabled:opacity-40 disabled:cursor-not-allowed"
+            className="px-6 py-2.5 text-[13px] font-semibold bg-gradient-to-b from-[var(--color-primary)] to-[var(--color-primary-dark)] text-white rounded-xl shadow-[var(--shadow-sm)] hover:shadow-[var(--shadow-md)] active:scale-[0.97] transition-all disabled:opacity-40 disabled:cursor-not-allowed"
           >
             {uploading ? '处理中...' : `上传 ${pendingFiles.length > 0 ? `(${pendingFiles.length})` : ''}`}
           </button>
